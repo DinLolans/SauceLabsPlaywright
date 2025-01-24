@@ -24,5 +24,4 @@ public class ProductsPage
         await _ui.Click(Locators.Icons.ShoppingCartIcon);
         return new CartPage(_ui);
     }
-
 }

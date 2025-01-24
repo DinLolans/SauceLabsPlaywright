@@ -17,7 +17,7 @@ public class Ui
 
     public IPage Page => _page;
 
-    public async Task OpenPage(string url)=>await _page.GotoAsync(url);
+    public async Task OpenPage(string url) => await _page.GotoAsync(url);
     
 
     public ILocator GetLocator(string locator) => _page.Locator(locator);

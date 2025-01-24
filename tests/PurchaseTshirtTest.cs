@@ -7,8 +7,11 @@ using NLog;
 public class PurchaseTshirtTest : PageTest
 {
     private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
-    private string Username => Environment.GetEnvironmentVariable("SAUCE_USERNAME") ?? "standard_user";
-    private string Password => Environment.GetEnvironmentVariable("SAUCE_PASSWORD") ?? "secret_sauce";
+
+    private string Username => Environment.GetEnvironmentVariable("SAUCE_USERNAME")
+    ?? throw new InvalidOperationException("SAUCE_USERNAME environment variable is not set");
+    private string Password => Environment.GetEnvironmentVariable("SAUCE_PASSWORD")
+    ?? throw new InvalidOperationException("SAUCE_PASSWORD environment variable is not set");
 
     private Ui _ui;
     private StartTest _startTest;
