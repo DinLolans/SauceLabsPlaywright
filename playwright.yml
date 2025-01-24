@@ -1,0 +1,42 @@
+name: SauceLabs Playwright Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'SauceLabs Username'
+        required: true
+      password:
+        description: 'SauceLabs Password'
+        required: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Install Playwright
+      run: pwsh bin/Debug/net8.0/playwright.ps1 install
+
+    - name: Build
+      run: dotnet build --configuration Release
+
+    - name: Run Playwright tests
+      env:
+        SAUCE_USERNAME: ${{ github.event.inputs.username || secrets.SAUCE_USERNAME }}
+        SAUCE_PASSWORD: ${{ github.event.inputs.password || secrets.SAUCE_PASSWORD }}
+      run: dotnet test --configuration Release
