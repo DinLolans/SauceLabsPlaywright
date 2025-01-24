@@ -1,0 +1,39 @@
+name: Playwright Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'Sauce Username'
+        required: true
+      password:
+        description: 'Sauce Password'
+        required: true
+        type: password
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --configuration Release
+
+    - name: Install Playwright browsers
+      run: pwsh bin/Release/net8.0/playwright.ps1 install
+
+    - name: Run Playwright tests
+      env:
+        SAUCE_USERNAME: ${{ github.event.inputs.username }}
+        SAUCE_PASSWORD: ${{ github.event.inputs.password }}
+      run: dotnet test --configuration Release
